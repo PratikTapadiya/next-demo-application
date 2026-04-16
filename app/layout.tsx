@@ -29,7 +29,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         {children}
-        <p className="text-red-500 text-3xl">Okay thankyou for installation</p>
       </body>
     </html>
   );
