@@ -1,9 +1,16 @@
 {
-	"servers": {
-		"github": {
-			"type": "http",
-			"url": "https://api.githubcopilot.com/mcp/"
-		}
-	},
-	"inputs": []
+  "servers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "context7": {
+      "config": {
+        "command": "npx",
+        "args": ["-y", "@upstash/context7-mcp@latest"]
+      },
+      "type": "http"
+    }
+  },
+  "inputs": []
 }
