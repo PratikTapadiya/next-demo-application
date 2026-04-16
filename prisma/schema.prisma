@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Mirrors auth.users from Supabase. The id is the Supabase user UUID.
+/// Prisma does NOT declare a foreign key to auth.users because that table
+/// lives in the `auth` schema which Prisma does not manage.
+model Profile {
+  id                    String   @id @db.Uuid
+  displayName           String?  @map("display_name") @db.VarChar(80)
+  preferredBaseCurrency String   @default("USD") @map("preferred_base_currency") @db.Char(3)
+  avatarUrl             String?  @map("avatar_url")
+  createdAt             DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  watchlistEntries WatchlistEntry[]
+
+  @@map("profiles")
+}
+
+/// Stores the currency pairs a user has saved to their watchlist.
+model WatchlistEntry {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  profileId     String   @map("profile_id") @db.Uuid
+  baseCurrency  String   @map("base_currency") @db.Char(3)
+  quoteCurrency String   @map("quote_currency") @db.Char(3)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, baseCurrency, quoteCurrency])
+  @@map("watchlist_entries")
+}

@@ -3,23 +3,27 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getUser, clearUser, type AuthUser } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 export default function DashboardNav() {
   const router = useRouter();
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const currentUser = getUser();
-    if (!currentUser) {
-      router.replace("/login");
-      return;
-    }
-    setUser(currentUser);
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) {
+        router.replace("/login");
+      } else {
+        setUser(user);
+      }
+    });
   }, [router]);
 
-  function handleLogout() {
-    clearUser();
+  async function handleLogout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
     router.push("/login");
   }
 
@@ -41,9 +45,11 @@ export default function DashboardNav() {
           {user && (
             <div className="hidden sm:flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-sm">
-                {user.name.charAt(0).toUpperCase()}
+                {(user.user_metadata?.display_name ?? user.email ?? "?").charAt(0).toUpperCase()}
               </div>
-              <span className="text-sm text-gray-700 font-medium">{user.name}</span>
+              <span className="text-sm text-gray-700 font-medium">
+                {user.user_metadata?.display_name ?? user.email}
+              </span>
             </div>
           )}
           <button

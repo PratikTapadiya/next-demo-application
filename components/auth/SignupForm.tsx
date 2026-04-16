@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import { setUser } from "@/lib/auth";
+import { signUpAction } from "@/app/actions/auth";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -14,11 +14,13 @@ export default function SignupForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
+    setInfo("");
 
     if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       setError("All fields are required.");
@@ -36,10 +38,29 @@ export default function SignupForm() {
     }
 
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 600));
+    try {
+      const result = await signUpAction({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+      });
 
-    setUser({ name: name.trim(), email: email.trim() });
-    router.push("/dashboard");
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+
+      if (result.requiresEmailConfirmation) {
+        setInfo("Account created! Check your email to confirm before signing in.");
+        return;
+      }
+
+      router.push("/dashboard");
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -107,6 +128,15 @@ export default function SignupForm() {
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
               {error}
+            </div>
+          )}
+
+          {info && (
+            <div className="flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-200 px-3 py-2.5 text-sm text-blue-700">
+              <svg className="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zm-1 4a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              {info}
             </div>
           )}
 

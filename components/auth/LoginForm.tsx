@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import { setUser } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -24,11 +24,24 @@ export default function LoginForm() {
     }
 
     setLoading(true);
-    // Simulate a brief network delay for realism
-    await new Promise((r) => setTimeout(r, 600));
+    try {
+      const supabase = createClient();
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
 
-    setUser({ name: "Demo User", email: email.trim() });
-    router.push("/dashboard");
+      if (signInError) {
+        setError(signInError.message);
+        return;
+      }
+
+      router.push("/dashboard");
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
