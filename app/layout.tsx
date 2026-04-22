@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Currency Comparator",
+  title: "RateLens",
   description: "Compare exchange rates across multiple currencies",
 };
 
