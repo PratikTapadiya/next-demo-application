@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import LogOutIcon from "~icons/material-symbols/logout-rounded";
 
 export default function DashboardNav() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function DashboardNav() {
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/login");
+    router.push("/");
   }
 
   return (
@@ -33,32 +34,44 @@ export default function DashboardNav() {
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600">
-            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <svg
+              className="w-4 h-4 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
             </svg>
           </div>
-          <span className="font-bold text-gray-900 text-lg hidden sm:inline">CurrencyComparator</span>
+          <span className="font-bold text-gray-900 text-lg sm:inline">
+            RateLens
+          </span>
         </Link>
 
         {/* Right side */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {user && (
-            <div className="hidden sm:flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-sm">
-                {(user.user_metadata?.display_name ?? user.email ?? "?").charAt(0).toUpperCase()}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-sm shrink-0">
+                {(user.user_metadata?.display_name ?? user.email ?? "?")
+                  .charAt(0)
+                  .toUpperCase()}
               </div>
-              <span className="text-sm text-gray-700 font-medium">
+              <span className="hidden sm:block text-sm text-gray-700 font-medium max-w-30 truncate">
                 {user.user_metadata?.display_name ?? user.email}
               </span>
             </div>
           )}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 transition"
+            className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 transition cursor-pointer shrink-0"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
+            <LogOutIcon />
             Logout
           </button>
         </div>

@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
+    "dev": "next dev --webpack",
+    "build": "prisma generate && next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "db:migrate": "prisma migrate dev",
@@ -22,7 +22,8 @@
     "prisma": "^7.7.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "recharts": "^3.8.1"
+    "recharts": "^3.8.1",
+    "unplugin-icons": "^23.0.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -31,6 +32,9 @@
     ]
   },
   "devDependencies": {
+    "@iconify/json": "^2.2.465",
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
