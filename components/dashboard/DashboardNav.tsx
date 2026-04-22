@@ -37,7 +37,7 @@ export default function DashboardNav() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <span className="font-bold text-gray-900 text-lg hidden sm:inline">AppName</span>
+          <span className="font-bold text-gray-900 text-lg hidden sm:inline">CurrencyComparator</span>
         </Link>
 
         {/* Right side */}
