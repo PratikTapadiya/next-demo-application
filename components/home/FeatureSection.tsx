@@ -1,9 +1,4 @@
-import RateIcon from "~icons/material-symbols/chart-data-outline-rounded";
-import ChartIcon from "~icons/material-symbols/insert-chart-outline-rounded";
-import SwapIcon from "~icons/material-symbols/swap-horiz-rounded";
-import ThunderIcon from "~icons/ant-design/thunderbolt-twotone";
-import LockIcon from "~icons/material-symbols/lock-person-outline-rounded";
-import MobileIcon from "~icons/material-symbols/phone-android-outline-rounded";
+import { TrendingUp, LineChart, ArrowLeftRight, Zap, Lock, Smartphone } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
@@ -11,37 +6,37 @@ type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 const features: { icon: IconComponent; title: string; description: string }[] =
   [
     {
-      icon: RateIcon,
+      icon: TrendingUp,
       title: "Live Exchange Rates",
       description:
         "Get up-to-the-minute exchange rates for 30+ currencies powered by the Frankfurter API — free, accurate, and always current.",
     },
     {
-      icon: ChartIcon,
+      icon: LineChart,
       title: "Historical Trend Charts",
       description:
         "Visualize rate movements over custom date ranges. Spot trends, compare fluctuations, and make informed decisions.",
     },
     {
-      icon: SwapIcon,
+      icon: ArrowLeftRight,
       title: "Multi-Currency Comparison",
       description:
         "Select a base currency and compare it against multiple quote currencies side by side on a single interactive chart.",
     },
     {
-      icon: ThunderIcon,
+      icon: Zap,
       title: "Instant Results",
       description:
         "No API key required. No sign-up needed to explore. Results load instantly with zero configuration on your end.",
     },
     {
-      icon: LockIcon,
+      icon: Lock,
       title: "Secure & Private",
       description:
         "Your data stays yours. Authentication is handled by Supabase with industry-standard security. No tracking, no ads.",
     },
     {
-      icon: MobileIcon,
+      icon: Smartphone,
       title: "Responsive Design",
       description:
         "Works beautifully on any device — desktop, tablet, or mobile. Your currency dashboard goes wherever you go.",

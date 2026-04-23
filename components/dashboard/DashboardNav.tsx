@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
-import LogOutIcon from "~icons/material-symbols/logout-rounded";
+import { LogOut } from "lucide-react";
 
 export default function DashboardNav() {
   const router = useRouter();
@@ -71,7 +71,7 @@ export default function DashboardNav() {
             onClick={handleLogout}
             className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 transition cursor-pointer shrink-0"
           >
-            <LogOutIcon />
+            <LogOut className="w-4 h-4" />
             Logout
           </button>
         </div>

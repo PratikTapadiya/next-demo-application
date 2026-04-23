@@ -1,6 +1,6 @@
 @AGENTS.md
 
-# CurrencyLens — Next.js Demo App
+# RateLens — Next.js Demo App
 
 A currency comparison web app for individual users. Users sign up, log in, and then explore or compare live and historical exchange rates through interactive charts.
 
@@ -12,14 +12,14 @@ A currency comparison web app for individual users. Users sign up, log in, and t
 
 ## Tech Stack
 
-| Layer | Library | Notes |
-|---|---|---|
-| Framework | **Next.js 16.2.4** | App Router only — no Pages Router |
-| UI | **React 19.2.4** + **TypeScript 5** | |
-| Styling | **Tailwind CSS v4** | No `tailwind.config.js` needed |
-| Auth | **Supabase** (`@supabase/supabase-js`, `@supabase/ssr`) | Email + password |
-| Currency data | **Frankfurter API** | Free, no key, CORS-friendly |
-| Charts | TBD — likely **Recharts** or **Chart.js** (`react-chartjs-2`) | Install when implementing dashboard |
+| Layer         | Library                                                       | Notes                               |
+| ------------- | ------------------------------------------------------------- | ----------------------------------- |
+| Framework     | **Next.js 16.2.4**                                            | App Router only — no Pages Router   |
+| UI            | **React 19.2.4** + **TypeScript 5**                           |                                     |
+| Styling       | **Tailwind CSS v4**                                           | No `tailwind.config.js` needed      |
+| Auth          | **Supabase** (`@supabase/supabase-js`, `@supabase/ssr`)       | Email + password                    |
+| Currency data | **Frankfurter API**                                           | Free, no key, CORS-friendly         |
+| Charts        | TBD — likely **Recharts** or **Chart.js** (`react-chartjs-2`) | Install when implementing dashboard |
 
 > Supabase and charting libraries are **not yet installed**. Run `npm install @supabase/supabase-js @supabase/ssr` before implementing auth. Add the chart library when building the dashboard.
 
@@ -44,12 +44,12 @@ Both are `NEXT_PUBLIC_` because they are safe for the browser. The anon key is n
 
 ## Pages & Routing
 
-| URL | File | Auth required | Description |
-|---|---|---|---|
-| `/` | `app/page.tsx` | No | Landing page — branding, feature highlights, CTA to sign up |
-| `/login` | `app/(auth)/login/page.tsx` | No | Supabase email/password login |
-| `/signup` | `app/(auth)/signup/page.tsx` | No | Supabase email/password registration |
-| `/dashboard` | `app/dashboard/page.tsx` | Yes | Currency chart — base vs quote(s) with date range selector |
+| URL          | File                         | Auth required | Description                                                 |
+| ------------ | ---------------------------- | ------------- | ----------------------------------------------------------- |
+| `/`          | `app/page.tsx`               | No            | Landing page — branding, feature highlights, CTA to sign up |
+| `/login`     | `app/(auth)/login/page.tsx`  | No            | Supabase email/password login                               |
+| `/signup`    | `app/(auth)/signup/page.tsx` | No            | Supabase email/password registration                        |
+| `/dashboard` | `app/dashboard/page.tsx`     | Yes           | Currency chart — base vs quote(s) with date range selector  |
 
 The `(auth)` route group shares a centered-card layout without affecting the URL.
 
@@ -96,21 +96,25 @@ utils/
 ## Supabase Auth
 
 **Client-side** (in Client Components marked `'use client'`):
-```ts
-import { createBrowserClient } from '@/lib/supabase/client'
 
-const supabase = createBrowserClient()
-await supabase.auth.signInWithPassword({ email, password })
-await supabase.auth.signUp({ email, password })
-await supabase.auth.signOut()
+```ts
+import { createBrowserClient } from "@/lib/supabase/client";
+
+const supabase = createBrowserClient();
+await supabase.auth.signInWithPassword({ email, password });
+await supabase.auth.signUp({ email, password });
+await supabase.auth.signOut();
 ```
 
 **Server-side** (in Server Components, layouts, Route Handlers):
-```ts
-import { createServerClient } from '@/lib/supabase/server'
 
-const supabase = await createServerClient()
-const { data: { user } } = await supabase.auth.getUser()
+```ts
+import { createServerClient } from "@/lib/supabase/server";
+
+const supabase = await createServerClient();
+const {
+  data: { user },
+} = await supabase.auth.getUser();
 ```
 
 **Route protection** — check the session in `app/dashboard/layout.tsx` (server-side) and redirect to `/login` if no user. Do **not** rely solely on a client-side guard.
@@ -121,30 +125,40 @@ const { data: { user } } = await supabase.auth.getUser()
 
 Base URL: `https://api.frankfurter.dev`
 
-| Endpoint | Example | Returns |
-|---|---|---|
-| Latest rates | `GET /v1/latest?base=EUR&symbols=USD,GBP` | Current rates |
-| Historical range | `GET /v1/2024-01-01..2024-04-01?base=EUR&symbols=USD` | Daily rates over a range |
-| Available currencies | `GET /v1/currencies` | Map of code → name |
+| Endpoint             | Example                                               | Returns                  |
+| -------------------- | ----------------------------------------------------- | ------------------------ |
+| Latest rates         | `GET /v1/latest?base=EUR&symbols=USD,GBP`             | Current rates            |
+| Historical range     | `GET /v1/2024-01-01..2024-04-01?base=EUR&symbols=USD` | Daily rates over a range |
+| Available currencies | `GET /v1/currencies`                                  | Map of code → name       |
 
 - No API key required
 - Free, no rate-limit concerns for demo use
 - All requests can be made from the browser (CORS allowed) or from Server Components
 
 **Fetch helper pattern** (`lib/frankfurter.ts`):
+
 ```ts
-const BASE = 'https://api.frankfurter.dev/v1'
+const BASE = "https://api.frankfurter.dev/v1";
 
 export async function getLatestRates(base: string, symbols: string[]) {
-  const res = await fetch(`${BASE}/latest?base=${base}&symbols=${symbols.join(',')}`)
-  if (!res.ok) throw new Error('Frankfurter fetch failed')
-  return res.json()
+  const res = await fetch(
+    `${BASE}/latest?base=${base}&symbols=${symbols.join(",")}`,
+  );
+  if (!res.ok) throw new Error("Frankfurter fetch failed");
+  return res.json();
 }
 
-export async function getHistoricalRates(base: string, symbols: string[], from: string, to: string) {
-  const res = await fetch(`${BASE}/${from}..${to}?base=${base}&symbols=${symbols.join(',')}`)
-  if (!res.ok) throw new Error('Frankfurter fetch failed')
-  return res.json()
+export async function getHistoricalRates(
+  base: string,
+  symbols: string[],
+  from: string,
+  to: string,
+) {
+  const res = await fetch(
+    `${BASE}/${from}..${to}?base=${base}&symbols=${symbols.join(",")}`,
+  );
+  if (!res.ok) throw new Error("Frankfurter fetch failed");
+  return res.json();
 }
 ```
 
@@ -152,11 +166,11 @@ export async function getHistoricalRates(base: string, symbols: string[], from: 
 
 **Read `node_modules/next/dist/docs/` before writing new code.**
 
-| What changed | Old (≤15) | New (16) |
-|---|---|---|
-| Request proxy / middleware | `middleware.ts` | **`proxy.ts`** at project root |
-| Proxy export name | `export default function middleware` | `export function proxy` (named) or default |
-| Client-side router | `next/navigation` | `next/navigation` (unchanged) |
+| What changed               | Old (≤15)                            | New (16)                                   |
+| -------------------------- | ------------------------------------ | ------------------------------------------ |
+| Request proxy / middleware | `middleware.ts`                      | **`proxy.ts`** at project root             |
+| Proxy export name          | `export default function middleware` | `export function proxy` (named) or default |
+| Client-side router         | `next/navigation`                    | `next/navigation` (unchanged)              |
 
 **Do not create `middleware.ts`** — it is deprecated and silently ignored. Use `proxy.ts`.
 
