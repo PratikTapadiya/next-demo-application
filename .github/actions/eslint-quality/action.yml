@@ -1,0 +1,65 @@
+# ─────────────────────────────────────────────────────────────
+# Composite Action — eslint-quality
+# Runs ESLint for RateLens on every PR. Keeps workflow files short.
+# ─────────────────────────────────────────────────────────────
+name: ESLint Quality Check
+description: Install dependencies and run ESLint; fails the check on lint errors.
+
+inputs:
+  node-version:
+    description: Node.js version
+    required: false
+    default: "20"
+  pnpm-version:
+    description: pnpm version (match lockfile v9)
+    required: false
+    default: "9"
+  working-directory:
+    description: Repository root relative path
+    required: false
+    default: "."
+  max-warnings:
+    description: ESLint --max-warnings (0 = fail on any warning)
+    required: false
+    default: "0"
+
+outputs:
+  passed:
+    description: "true if ESLint exited 0"
+    value: ${{ steps.lint.outputs.passed }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.pnpm-version }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+        cache-dependency-path: ${{ inputs.working-directory }}/pnpm-lock.yaml
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm install --frozen-lockfile
+
+    - name: Run ESLint
+      id: lint
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        set +e
+        pnpm exec eslint . --max-warnings "${{ inputs.max-warnings }}"
+        code=$?
+        set -e
+        if [ "$code" -eq 0 ]; then
+          echo "passed=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "passed=false" >> "$GITHUB_OUTPUT"
+          exit "$code"
+        fi
