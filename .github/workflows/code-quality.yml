@@ -28,7 +28,6 @@ jobs:
         uses: ./.github/actions/eslint-quality
         with:
           node-version: "20"
-          pnpm-version: "9"
           max-warnings: "0"
 
   typescript:
@@ -42,4 +41,3 @@ jobs:
         uses: ./.github/actions/typescript-quality
         with:
           node-version: "20"
-          pnpm-version: "9"

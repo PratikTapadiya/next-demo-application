@@ -1,6 +1,7 @@
 # ─────────────────────────────────────────────────────────────
 # Composite Action — eslint-quality
 # Runs ESLint for RateLens on every PR. Keeps workflow files short.
+# pnpm version comes from package.json "packageManager" (do not pass version here).
 # ─────────────────────────────────────────────────────────────
 name: ESLint Quality Check
 description: Install dependencies and run ESLint; fails the check on lint errors.
@@ -10,10 +11,6 @@ inputs:
     description: Node.js version
     required: false
     default: "20"
-  pnpm-version:
-    description: pnpm version (match lockfile v9)
-    required: false
-    default: "9"
   working-directory:
     description: Repository root relative path
     required: false
@@ -33,8 +30,6 @@ runs:
   steps:
     - name: Setup pnpm
       uses: pnpm/action-setup@v4
-      with:
-        version: ${{ inputs.pnpm-version }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
