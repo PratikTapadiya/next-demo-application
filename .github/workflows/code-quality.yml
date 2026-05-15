@@ -1,0 +1,43 @@
+# ─────────────────────────────────────────────────────────────
+# Code quality on every pull request (and on pushes to main)
+# ─────────────────────────────────────────────────────────────
+name: Code Quality
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+concurrency:
+  group: code-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: ESLint quality check
+        uses: ./.github/actions/eslint-quality
+        with:
+          node-version: "20"
+          max-warnings: "0"
+
+  typescript:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: TypeScript quality check
+        uses: ./.github/actions/typescript-quality
+        with:
+          node-version: "20"

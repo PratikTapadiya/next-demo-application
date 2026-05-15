@@ -1,0 +1,61 @@
+# ─────────────────────────────────────────────────────────────
+# Composite Action — typescript-quality
+# Runs TypeScript type-check (tsc --noEmit) for RateLens on every PR.
+# pnpm version comes from package.json "packageManager" (do not pass version here).
+# ─────────────────────────────────────────────────────────────
+name: TypeScript Quality Check
+description: Install dependencies, generate Prisma client, and run tsc --noEmit.
+
+inputs:
+  node-version:
+    description: Node.js version
+    required: false
+    default: "20"
+  working-directory:
+    description: Repository root relative path
+    required: false
+    default: "."
+
+outputs:
+  passed:
+    description: "true if tsc exited 0"
+    value: ${{ steps.typecheck.outputs.passed }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+        cache-dependency-path: pnpm-lock.yaml
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm install --frozen-lockfile
+
+    - name: Generate Prisma client
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm exec prisma generate
+
+    - name: Run TypeScript check
+      id: typecheck
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        set +e
+        pnpm exec tsc --noEmit
+        code=$?
+        set -e
+        if [ "$code" -eq 0 ]; then
+          echo "passed=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "passed=false" >> "$GITHUB_OUTPUT"
+          exit "$code"
+        fi
