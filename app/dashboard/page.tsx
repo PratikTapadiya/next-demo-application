@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CurrencyChart from "@/components/dashboard/CurrencyChart";
+import CurrencyConverter from "@/components/dashboard/CurrencyConverter";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -15,6 +16,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
+      <CurrencyConverter />
       <CurrencyChart />
     </div>
   );
