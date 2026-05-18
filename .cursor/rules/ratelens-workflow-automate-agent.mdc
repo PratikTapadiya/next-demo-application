@@ -1,0 +1,57 @@
+---
+description: >-
+  Any Linear ticket (PRA-*, Linear URL, or ticket intent) MUST run
+  ratelens-workflow-automate-agent via Task delegation — never implement in parent.
+alwaysApply: true
+---
+
+# RateLens Linear Autopilot (always on)
+
+## Ticket triggers — mandatory workflow
+
+If the **latest user message** (or obvious thread follow-up) matches **any** of the below, you **must not** implement ticket work in this (parent) agent. **First action:** delegate with the **Task** tool:
+
+```text
+subagent_type: ratelens-workflow-automate-agent
+```
+
+Pass the full ticket context, issue id/URL, and user intent in the Task `prompt`. Wait for the subagent result, then summarize for the user.
+
+### Triggers (any one = delegate)
+
+| # | Pattern | Examples |
+|---|---------|----------|
+| 1 | Issue id | `PRA-7`, `pra-7`, any `[A-Z]{2,5}-\d+` in RateLens context |
+| 2 | Linear URL | `linear.app/.../issue/...`, `linear.team/...` |
+| 3 | Ticket + action words | *work on*, *implement*, *build*, *fix*, *ship*, *tackle*, *pick up*, *automate*, *do* + ticket or URL |
+| 4 | Explicit workflow | `@ratelens-workflow-automate-agent`, *RateLens workflow*, *automate Linear ticket* |
+| 5 | Resume | *continue*, *resume*, *proceed*, *implement it* when a ticket is already in the thread |
+
+### Not triggers (parent may answer normally)
+
+- Listing or querying tickets only (*what's in todo*, *remaining issues*) with **no** request to implement
+- General coding with **no** issue id or Linear URL
+
+## Subagent contract
+
+The subagent executes **`.cursor/agents/ratelens-workflow-automate-agent.md`** end-to-end:
+
+1. **Read** each phase `SKILL.md` under `.cursor/skills/heaptrace-skills/` (Read tool, full file) before that phase
+2. Post **Workflow progress** + **Skills used** each phase
+3. **Plan gate** — summary + approach → **wait for `approve`** before code
+4. Phases 5–8 — implement → validators → code-review → code-standards → smart-commit
+5. **Ship gate** — git/PR proposal → **wait for `approve git+pr`** before push/PR
+6. **Done** on Linear only after merge to `main`
+
+## Parent agent — forbidden when triggered
+
+- Do **not** skip Task delegation and implement ticket changes yourself
+- Do **not** mark Linear **Done** before merge to `main`
+- Do **not** push or `gh pr create` without ship approval
+- Do **not** create `middleware.ts` (use `proxy.ts` per Next.js 16)
+
+## Project
+
+- Linear project: **RateLens** · Team prefix: **PRA**
+- Conventions: `CLAUDE.md`
+- Invoke manually: `@ratelens-workflow-automate-agent`

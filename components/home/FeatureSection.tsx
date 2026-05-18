@@ -45,12 +45,12 @@ const features: { icon: IconComponent; title: string; description: string }[] =
 
 export default function FeatureSection() {
   return (
-    <section className="bg-gray-100 px-6 py-20">
+    <section className="bg-gray-100 px-6 py-20 dark:bg-gray-900">
       <div className="mx-auto max-w-5xl">
-        <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
+        <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
           Everything you need to track currencies
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-center text-lg text-gray-500">
+        <p className="mx-auto mt-4 max-w-xl text-center text-lg text-gray-500 dark:text-gray-400">
           RateLens gives you the tools to monitor global exchange
           rates without the complexity.
         </p>
@@ -59,13 +59,13 @@ export default function FeatureSection() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm flex flex-col gap-4"
+              className="flex flex-col gap-4 rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:shadow-none"
             >
-              <feature.icon className="size-10 text-black" />
-              <h3 className="text-base font-semibold text-gray-900">
+              <feature.icon className="size-10 text-black dark:text-gray-100" />
+              <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
                 {feature.title}
               </h3>
-              <p className="text-sm leading-6 text-gray-500">
+              <p className="text-sm leading-6 text-gray-500 dark:text-gray-400">
                 {feature.description}
               </p>
             </div>
