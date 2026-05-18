@@ -10,8 +10,8 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Currency Comparison</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Currency Comparison</h1>
+        <p className="text-gray-500 mt-1 dark:text-gray-400">
           Track historical exchange rate trends across multiple currencies.
         </p>
       </div>
