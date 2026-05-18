@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useSyncExternalStore } from "react";
+import { useTheme } from "next-themes";
 import {
   LineChart,
   Line,
@@ -57,8 +58,8 @@ function CustomTooltip({
   if (!active || !payload?.length || !label) return null;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-sm">
-      <p className="font-semibold text-gray-700 mb-2">{label}</p>
+    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-sm dark:bg-gray-800 dark:border-gray-600">
+      <p className="font-semibold text-gray-700 mb-2 dark:text-gray-200">{label}</p>
       {payload.map((entry) => {
         const raw = rawRates[label]?.[entry.name];
         return (
@@ -67,7 +68,7 @@ function CustomTooltip({
               className="w-2.5 h-2.5 rounded-full shrink-0"
               style={{ backgroundColor: entry.color }}
             />
-            <span className="text-gray-600 font-medium w-10">{entry.name}</span>
+            <span className="text-gray-600 font-medium w-10 dark:text-gray-300">{entry.name}</span>
             <span
               className={entry.value >= 0 ? "text-emerald-600" : "text-red-500"}
             >
@@ -84,6 +85,12 @@ function CustomTooltip({
 }
 
 export default function CurrencyChart() {
+  const { resolvedTheme } = useTheme();
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const [base, setBase] = useState("USD");
   const [quotes, setQuotes] = useState(["EUR", "GBP", "JPY"]);
   const [range, setRange] = useState<RangeKey>("90D");
@@ -102,6 +109,10 @@ export default function CurrencyChart() {
       .then(setCurrencies)
       .catch(() => {});
   }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+  const gridStroke = isDark ? "#374151" : "#f0f0f0";
+  const tickFill = isDark ? "#9ca3af" : "#9ca3af";
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -169,8 +180,8 @@ export default function CurrencyChart() {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6">
-      <h2 className="text-base font-semibold text-gray-900 mb-5">
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 dark:bg-gray-900 dark:border-gray-700">
+      <h2 className="text-base font-semibold text-gray-900 mb-5 dark:text-gray-100">
         Currency Comparison
       </h2>
 
@@ -178,11 +189,11 @@ export default function CurrencyChart() {
       <div className="flex flex-wrap items-center gap-4 mb-5">
         {/* Base selector */}
         <div className="flex items-center gap-2">
-          <label className="text-sm text-black whitespace-nowrap">Base</label>
+          <label className="text-sm text-black whitespace-nowrap dark:text-gray-300">Base</label>
           <select
             value={base}
             onChange={(e) => setBase(e.target.value)}
-            className="text-sm border border-black rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
+            className="text-sm border border-black rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           >
             {CURRENCY_CODES.map((c) => (
               <option key={c} value={c}>
@@ -194,7 +205,7 @@ export default function CurrencyChart() {
 
         {/* Quote chips */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-black">Quotes</span>
+          <span className="text-sm text-black dark:text-gray-300">Quotes</span>
           {quotes.map((q, i) => (
             <span
               key={q}
@@ -216,7 +227,7 @@ export default function CurrencyChart() {
             <select
               value={addingQuote}
               onChange={(e) => addQuote(e.target.value)}
-              className="text-xs border border-black rounded-full px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
+              className="text-xs border border-black rounded-full px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
             >
               <option value="">+ Add</option>
               {availableToAdd.map((c) => (
@@ -238,7 +249,7 @@ export default function CurrencyChart() {
             className={`px-3 py-1 rounded-md text-xs font-semibold transition ${
               range === r
                 ? "bg-indigo-600 text-white"
-                : "text-gray-500 hover:bg-gray-100"
+                : "text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             }`}
           >
             {r}
@@ -249,19 +260,19 @@ export default function CurrencyChart() {
       {/* Chart area */}
       {loading && (
         <div className="space-y-3 animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/3" />
-          <div className="h-64 bg-gray-100 rounded-lg" />
+          <div className="h-4 bg-gray-200 rounded w-1/3 dark:bg-gray-700" />
+          <div className="h-64 bg-gray-100 rounded-lg dark:bg-gray-800" />
           <div className="flex gap-4">
-            <div className="h-3 bg-gray-200 rounded w-16" />
-            <div className="h-3 bg-gray-200 rounded w-16" />
-            <div className="h-3 bg-gray-200 rounded w-16" />
+            <div className="h-3 bg-gray-200 rounded w-16 dark:bg-gray-700" />
+            <div className="h-3 bg-gray-200 rounded w-16 dark:bg-gray-700" />
+            <div className="h-3 bg-gray-200 rounded w-16 dark:bg-gray-700" />
           </div>
         </div>
       )}
 
       {!loading && error && (
         <div className="flex flex-col items-center justify-center h-64 gap-4 text-center">
-          <div className="flex items-center gap-2 text-amber-600">
+          <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
             <svg
               className="w-5 h-5"
               fill="none"
@@ -292,24 +303,30 @@ export default function CurrencyChart() {
             data={chartData}
             margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
             <XAxis
               dataKey="date"
               tickFormatter={xTickFormatter}
-              tick={{ fontSize: 11, fill: "#9ca3af" }}
+              tick={{ fontSize: 11, fill: tickFill }}
               tickLine={false}
               axisLine={false}
               interval="preserveStartEnd"
             />
             <YAxis
               tickFormatter={(v: number) => `${v.toFixed(1)}%`}
-              tick={{ fontSize: 11, fill: "#9ca3af" }}
+              tick={{ fontSize: 11, fill: tickFill }}
               tickLine={false}
               axisLine={false}
               width={55}
             />
             <Tooltip content={<CustomTooltip rawRates={rawRates} />} />
-            <Legend wrapperStyle={{ paddingTop: "16px", fontSize: "12px" }} />
+            <Legend
+              wrapperStyle={{
+                paddingTop: "16px",
+                fontSize: "12px",
+                color: isDark ? "#d1d5db" : "#374151",
+              }}
+            />
             {quotes.map((quote, i) => (
               <Line
                 key={quote}
@@ -327,7 +344,7 @@ export default function CurrencyChart() {
       )}
 
       {!loading && !error && chartData.length === 0 && (
-        <div className="flex items-center justify-center h-64 text-sm text-gray-400">
+        <div className="flex items-center justify-center h-64 text-sm text-gray-400 dark:text-gray-500">
           No data available for the selected range.
         </div>
       )}

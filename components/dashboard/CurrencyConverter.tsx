@@ -6,7 +6,7 @@ import { CURRENCY_CODES, formatRate } from "@/utils/currency";
 import Input from "@/components/ui/Input";
 
 const selectClassName =
-  "text-sm border border-black rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black w-full";
+  "text-sm border border-black rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black w-full dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100";
 
 export default function CurrencyConverter() {
   const [from, setFrom] = useState("USD");
@@ -59,17 +59,17 @@ export default function CurrencyConverter() {
     rate !== null && amountValid ? parsedAmount * rate : null;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-8">
-      <h2 className="text-base font-semibold text-gray-900 mb-1">
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-8 dark:bg-gray-900 dark:border-gray-700">
+      <h2 className="text-base font-semibold text-gray-900 mb-1 dark:text-gray-100">
         Currency converter
       </h2>
-      <p className="text-sm text-gray-500 mb-5">
+      <p className="text-sm text-gray-500 mb-5 dark:text-gray-400">
         Convert amounts using live exchange rates.
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-end">
         <div className="flex flex-col gap-1">
-          <label htmlFor="converter-from" className="text-sm text-black">
+          <label htmlFor="converter-from" className="text-sm text-black dark:text-gray-300">
             From
           </label>
           <select
@@ -97,7 +97,7 @@ export default function CurrencyConverter() {
         />
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="converter-to" className="text-sm text-black">
+          <label htmlFor="converter-to" className="text-sm text-black dark:text-gray-300">
             To
           </label>
           <select
@@ -115,9 +115,9 @@ export default function CurrencyConverter() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-700">Result</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Result</span>
           <div
-            className="min-h-[42px] flex flex-col justify-center rounded-lg border border-gray-200 bg-gray-50 px-3 py-2"
+            className="min-h-[42px] flex flex-col justify-center rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-gray-700 dark:bg-gray-800"
             aria-live="polite"
           >
             {loading && (
@@ -126,18 +126,18 @@ export default function CurrencyConverter() {
               </span>
             )}
             {!loading && error && (
-              <span className="text-sm text-amber-700">{error}</span>
+              <span className="text-sm text-amber-700 dark:text-amber-400">{error}</span>
             )}
             {!loading && !error && !amountValid && (
               <span className="text-sm text-gray-400">Enter a valid amount</span>
             )}
             {!loading && !error && amountValid && converted !== null && (
               <>
-                <span className="text-lg font-semibold text-gray-900">
+                <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                   {formatRate(converted)} {to}
                 </span>
                 {from !== to && rate !== null && (
-                  <span className="text-xs text-gray-500 mt-0.5">
+                  <span className="text-xs text-gray-500 mt-0.5 dark:text-gray-400">
                     1 {from} = {formatRate(rate)} {to}
                     {rateDate ? ` · ${rateDate}` : ""}
                   </span>

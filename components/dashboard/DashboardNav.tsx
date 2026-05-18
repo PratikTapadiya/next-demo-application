@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { LogOut } from "lucide-react";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 
 export default function DashboardNav() {
   const router = useRouter();
@@ -29,9 +30,8 @@ export default function DashboardNav() {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200">
+    <header className="bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Logo */}
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600">
             <svg
@@ -48,28 +48,28 @@ export default function DashboardNav() {
               />
             </svg>
           </div>
-          <span className="font-bold text-gray-900 text-lg sm:inline">
+          <span className="font-bold text-gray-900 text-lg sm:inline dark:text-gray-100">
             RateLens
           </span>
         </Link>
 
-        {/* Right side */}
         <div className="flex items-center gap-2 sm:gap-3">
           {user && (
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-sm shrink-0">
+              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-sm shrink-0 dark:bg-indigo-950 dark:text-indigo-300">
                 {(user.user_metadata?.display_name ?? user.email ?? "?")
                   .charAt(0)
                   .toUpperCase()}
               </div>
-              <span className="hidden sm:block text-sm text-gray-700 font-medium max-w-30 truncate">
+              <span className="hidden sm:block text-sm text-gray-700 font-medium max-w-30 truncate dark:text-gray-300">
                 {user.user_metadata?.display_name ?? user.email}
               </span>
             </div>
           )}
+          <ThemeToggle />
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 transition cursor-pointer shrink-0"
+            className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 transition cursor-pointer shrink-0 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
           >
             <LogOut className="w-4 h-4" />
             Logout
