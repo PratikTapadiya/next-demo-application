@@ -1,9 +1,6 @@
 import type { ReactNode } from "react";
+import AuthLayoutShell from "@/components/auth/AuthLayoutShell";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
-      {children}
-    </div>
-  );
+  return <AuthLayoutShell>{children}</AuthLayoutShell>;
 }

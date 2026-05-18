@@ -19,7 +19,7 @@ export default function Button({
     primary:
       "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500",
     ghost:
-      "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-indigo-500",
+      "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700",
   };
 
   return (
