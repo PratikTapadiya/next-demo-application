@@ -109,3 +109,7 @@ prisma/           # Schema and migrations
 
 Frankfurter playground (similar chart UX):  
 https://frankfurter.dev/playground/?base=EUR&quotes=USD%2CGBP%2CJPY&range=90
+
+
+Command for typecheck and lintfix 
+- pnpm run typecheck && pnpm run lint:fix 

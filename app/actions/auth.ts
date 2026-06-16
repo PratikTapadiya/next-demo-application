@@ -3,16 +3,16 @@
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/db";
 
-interface SignUpPayload {
-  name: string;
-  email: string;
-  password: string;
-}
-
 export async function signUpAction(
-  payload: SignUpPayload
+  formData: FormData
 ): Promise<{ error?: string; requiresEmailConfirmation?: boolean }> {
-  const { name, email, password } = payload;
+  const name = formData.get("name") as string | null;
+  const email = formData.get("email") as string | null;
+  const password = formData.get("password") as string | null;
+
+  if (!name || !email || !password) {
+    return { error: "Missing required fields" };
+  }
 
   const supabase = await createClient();
 
