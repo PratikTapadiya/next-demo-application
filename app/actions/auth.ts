@@ -3,12 +3,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/db";
 
-interface SignUpPayload {
-  name: string;
-  email: string;
-  password: string;
-}
-
 export async function signUpAction(
   formData: FormData
 ): Promise<{ error?: string; requiresEmailConfirmation?: boolean }> {
