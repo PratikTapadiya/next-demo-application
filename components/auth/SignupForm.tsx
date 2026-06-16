@@ -39,11 +39,12 @@ export default function SignupForm() {
 
     setLoading(true);
     try {
-      const result = await signUpAction({
-        name: name.trim(),
-        email: email.trim(),
-        password,
-      });
+      const formData = new FormData();
+      formData.append("name", name.trim());
+      formData.append("email", email.trim());
+      formData.append("password", password);
+
+      const result = await signUpAction(formData);
 
       if (result.error) {
         setError(result.error);
