@@ -23,6 +23,7 @@ ENV NODE_ENV=production
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/.env* ./
 
 # Copy prisma schema + generated client (pnpm stores it here)
 COPY --from=builder /app/prisma ./prisma
