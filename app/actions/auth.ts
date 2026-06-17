@@ -1,11 +1,11 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/db";
+import { createClient } from "@/lib/supabase/server";
 
 export async function signUpAction(
   formData: FormData
-): Promise<{ error?: string; requiresEmailConfirmation?: boolean }> {
+): Promise<{ error?: string; requiresEmailConfirmation?: boolean; success?: boolean }> {
   const name = formData.get("name") as string | null;
   const email = formData.get("email") as string | null;
   const password = formData.get("password") as string | null;
@@ -45,5 +45,29 @@ export async function signUpAction(
     return { requiresEmailConfirmation: true };
   }
 
-  return {};
+  return { success: true };
+}
+
+export async function signInAction(
+  formData: FormData
+): Promise<{ error?: string; success?: boolean }> {
+  const email = formData.get("email") as string | null;
+  const password = formData.get("password") as string | null;
+
+  if (!email || !password) {
+    return { error: "Missing required fields" };
+  }
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true };
 }

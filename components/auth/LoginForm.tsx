@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Input from "@/components/ui/Input";
+import { signInAction } from "@/app/actions/auth";
 import Button from "@/components/ui/Button";
-import { createClient } from "@/lib/supabase/client";
+import Input from "@/components/ui/Input";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -25,14 +25,14 @@ export default function LoginForm() {
 
     setLoading(true);
     try {
-      const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
+      const formData = new FormData();
+      formData.append("email", email.trim());
+      formData.append("password", password);
 
-      if (signInError) {
-        setError(signInError.message);
+      const result = await signInAction(formData);
+
+      if (result.error) {
+        setError(result.error);
         return;
       }
 
