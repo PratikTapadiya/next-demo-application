@@ -105,11 +105,5 @@ prisma/           # Schema and migrations
 - **`CLAUDE.md`** — architecture, Supabase/Frankfurter patterns, Next.js 16 conventions (`proxy.ts`, not `middleware.ts`)
 - **`AGENTS.md`** — agent and Linear workflow notes for this repo
 
-## Reference UI
-
-Frankfurter playground (similar chart UX):  
-https://frankfurter.dev/playground/?base=EUR&quotes=USD%2CGBP%2CJPY&range=90
-
-
 Command for typecheck and lintfix 
 - pnpm run typecheck && pnpm run lint:fix 
